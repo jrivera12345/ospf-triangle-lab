@@ -26,3 +26,15 @@ OSPF process 1, area 0, all links and LANs advertised.
 - Tested failover by shutting down a link
 
 ## Troubleshooting: Hello/Dead Timer Mismatch
+**What I changed:** set hello to 2 and dead to 120 on R2's G0/1 interface connected to R3
+**What happened:** neighbor with R3 went from FULL to DOWN state. Thus, adjacency never formed
+**How I diagnosed it:** I used commands show ip ospf neighbor which showed me that R3's neighbor ID of 10.0.3.1 was no longer neighbors with R2. And show ip ospf interface showed me that R2 and R3 has mismatched hello and dead intervals.
+**Fix:** I changed R2's hello interval to 10 and dead to 40. After a couple seconds, a got a log message that said it went from LOADING to FULL.
+**Takeaway:** hello and dead intervals must match on both ends of a link for an adjacency to form
+
+## Key Commands Used
+- show ip ospf neighbor
+- show ip route ospf
+- show ip ospf neighbor
+- ip ospf hello-interval
+- ip ospf dead-interval
